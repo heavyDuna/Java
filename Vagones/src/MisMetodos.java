@@ -10,14 +10,13 @@ import com.mysql.jdbc.Statement;
 
 public class MisMetodos extends Conexion {
 
-	int op=0;
+	int op = 0;
 	String texto;
-	
+
 	ArrayList datos = new ArrayList();
 	Date fecha = new Date();
 	SimpleDateFormat d = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	String hActual = d.format(fecha);
-	
 
 	public void visualizarLineas() {
 
@@ -103,8 +102,6 @@ public class MisMetodos extends Conexion {
 
 	public void visualizarEstacionOrigen() {
 
-		// if (existeLinea(idLinea) == true) {
-
 		Statement stmt = null;
 		ResultSet rset = null;
 		Connection con = (Connection) getConexion();
@@ -133,7 +130,7 @@ public class MisMetodos extends Conexion {
 
 		} catch (SQLException e) {
 
-			e.printStackTrace();
+			System.out.println("No se han podido visualizar las estaciones");
 		}
 
 	}
@@ -172,7 +169,7 @@ public class MisMetodos extends Conexion {
 
 		} catch (SQLException e) {
 
-			e.printStackTrace();
+			System.out.println("No se han podido visualizar las estaciones");
 		}
 
 		return false;
@@ -189,18 +186,16 @@ public class MisMetodos extends Conexion {
 		System.out.println("1.Efectivo");
 		System.out.println("2.Tarjeta");
 		op = MisMetodos.leerEntero();
-		if(op==1) {
-			
+		if (op == 1) {
+
 			datos.add("efectivo");
-			
-		}else {
+
+		} else {
 			datos.add("tarjeta");
 		}
-		
-		
-		System.out.println(datos.toString());
 
-		insertarBillete((int) datos.get(0),(int) datos.get(1),(String) datos.get(2),(String) datos.get(3), "activo", hActual);
+		insertarBillete((int) datos.get(0), (int) datos.get(1), (String) datos.get(2), (String) datos.get(3), "activo",
+				hActual);
 
 	}
 
@@ -238,16 +233,7 @@ public class MisMetodos extends Conexion {
 
 	}
 
-	public void insertarBillete(int IdLinea, int idVagon, String nombre, String pago, String estado, String hActual2) {
-		
-		System.out.println(IdLinea);
-		System.out.println(idVagon);
-		System.out.println(nombre);
-		System.out.println(pago);
-		System.out.println(estado);
-		System.out.println(hActual2);
-		
-		
+	public void insertarBillete(int idLinea, int idVagon, String nombre, String pago, String estado, String fec) {
 		boolean existe = true;
 
 		Statement stmt = null;
@@ -256,14 +242,15 @@ public class MisMetodos extends Conexion {
 
 		String sql = "INSERT INTO billetes (IdLinea, IdVagon, NombreViajero, Pago, Estado, FechaExpedicion)"
 
-				+ " VALUES ('idLinea', 'idVagon', 'nombre', 'pago', 'estado', 'hora')";
+				+ " VALUES ('idLinea', 'idVagon', 'nombre', 'pago', 'estado', 'fec')";
 
 		try {
 
 			stmt = (Statement) con.createStatement();
 			stmt.executeUpdate(sql);
-		
 
+			rset.close();
+			stmt.close();
 			con.close();
 
 		} catch (Exception e) {
